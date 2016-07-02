@@ -60,6 +60,7 @@ public class Client extends JFrame {
 			ip = InetAddress.getByName(address);
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
+			return false;
 		}
 		return true;
 	}
