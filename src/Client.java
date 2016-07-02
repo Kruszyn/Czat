@@ -35,6 +35,7 @@ public class Client extends JFrame {
 	private JTextArea history;
 	private DefaultCaret caret;
 
+	private Thread send;
 	private DatagramSocket socket;
 	private InetAddress ip;
 	
@@ -56,13 +57,27 @@ public class Client extends JFrame {
 
 	private boolean openConnection(String address, int port){
 		try {
-			socket = new DatagramSocket();
+			socket = new DatagramSocket(port);
 			ip = InetAddress.getByName(address);
 		} catch (UnknownHostException | SocketException e) {
 			e.printStackTrace();
 			return false;
 		}
 		return true;
+	}
+	
+	private void send(final byte[] data){
+		send = new Thread("send"){
+			public void run(){
+				DatagramPacket packet = new DatagramPacket(data, data.length, ip, port);
+				try {
+					socket.send(packet);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		};
+		send.start();
 	}
 	
 	private String receive(){
