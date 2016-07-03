@@ -31,13 +31,14 @@ public class Client extends JFrame {
 	private String name;
 	private String address;
 	private int port;
+	private InetAddress ip;
+	
 	private JTextField txtMessage;
 	private JTextArea history;
 	private DefaultCaret caret;
 
 	private Thread send;
 	private DatagramSocket socket;
-	private InetAddress ip;
 	
 	
 	public Client(String name, String address, int port) {
@@ -52,7 +53,7 @@ public class Client extends JFrame {
 		}
 		createWindow();
 		console("Nawi¹zuje po³¹czenie z " + address + ": " + port + ", u¿ytkownik: " + name );
-		String connection = name + " connected from " + address + ":" + port;
+		String connection = "/c/" + name;
 		send(connection.getBytes());
 	}
 
