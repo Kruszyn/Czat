@@ -59,12 +59,7 @@ public class Server implements Runnable{
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-					String string = new String(packet.getData());
-					process(packet);
-					clients.add(new ServerClient("asd", packet.getAddress(), packet.getPort(), gen.nextInt()));
-					System.out.println(clients.get(0).address.toString() + ": " + clients.get(0).port);
-					System.out.println(string);
-					
+					process(packet);	
 				}
 			}
 		};
@@ -93,10 +88,19 @@ public class Server implements Runnable{
 		send.start();
 	}
 	
+
+	private void send(String message, InetAddress address, int port) {
+		message += "/e/";
+		send(message.getBytes(), address, port);
+	} 
+
 	private void process(DatagramPacket packet){
 		String string = new String(packet.getData());
 		if(string.startsWith("/c/")){
-			clients.add(new ServerClient(string.substring(3, string.length()), packet.getAddress(), packet.getPort(), gen.nextInt()));
+			int id = gen.nextInt();
+			clients.add(new ServerClient(string.substring(3, string.length()), packet.getAddress(), packet.getPort(), id));
+			String ID = "/c/" + id;
+			send(ID, packet.getAddress(), packet.getPort());
 		} else if(string.startsWith("/m/")){
 			sendToAll(string);
 		} else {
